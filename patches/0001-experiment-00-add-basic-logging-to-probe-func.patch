@@ -1,0 +1,51 @@
+From 254eac800edffe1fbdc29142760095ca66c8e680 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=D0=9E=D0=BB=D0=B5=D0=B3=20=D0=A5=D0=BE=D0=B4=D0=BA=D0=B5?=
+ =?UTF-8?q?=D0=B2=D0=B8=D1=87?= <khadkevich@tut.by>
+Date: Thu, 27 Apr 2023 23:02:31 +0300
+Subject: [PATCH] experiment 00: add basic logging to probe func
+
+---
+ drivers/media/usb/dvb-usb/technisat-usb2.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/usb/dvb-usb/technisat-usb2.c b/drivers/media/usb/dvb-usb/technisat-usb2.c
+index df90c6c5f..867627c4e 100644
+--- a/drivers/media/usb/dvb-usb/technisat-usb2.c
++++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
+@@ -763,15 +763,23 @@ static int technisat_usb2_probe(struct usb_interface *intf,
+ {
+ 	struct dvb_usb_device *dev;
+ 
++	pr_info("technisat_usb2_probe: 0");
++
+ 	if (dvb_usb_device_init(intf, &technisat_usb2_devices, THIS_MODULE,
+-				&dev, adapter_nr) != 0)
++				&dev, adapter_nr) != 0) {
++		pr_info("technisat_usb2_probe: 1");
+ 		return -ENODEV;
++	}
+ 
+ 	if (dev) {
+ 		struct technisat_usb2_state *state = dev->priv;
+ 		state->dev = dev;
+ 
++		pr_info("technisat_usb2_probe: 2");
++
+ 		if (!disable_led_control) {
++			pr_info("technisat_usb2_probe: 3");
++
+ 			INIT_DELAYED_WORK(&state->green_led_work,
+ 					technisat_usb2_green_led_control);
+ 			schedule_delayed_work(&state->green_led_work,
+@@ -779,6 +787,8 @@ static int technisat_usb2_probe(struct usb_interface *intf,
+ 		}
+ 	}
+ 
++	pr_info("technisat_usb2_probe: 4");
++
+ 	return 0;
+ }
+ 
+-- 
+2.11.0
+
